@@ -1,9 +1,12 @@
+import NavBar from "./components/NavBar";
 
 const App = () => {
   return (
-    <div>
-      <h1 className="text-3xl font-bold underline">Hello world!</h1>
-    </div>
+    <main>
+      <NavBar>
+        <h1 className="text-white">Financly.</h1>
+      </NavBar>
+    </main>
   );
 }
 
