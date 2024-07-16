@@ -1,4 +1,4 @@
-import { onAuthStateChanged, User } from "firebase/auth";
+import { onAuthStateChanged, signOut, User } from "firebase/auth";
 import { useEffect, useState } from "react";
 
 import { auth } from "../Firebase/Firebase";
@@ -18,9 +18,15 @@ const useAuth = () => {
     };
   }, []);
 
+  const logOut = () => {
+    setLoading(true);
+    return signOut(auth)
+  }
+
   return {
     user,
     loading,
+    logOut
   };
 };
 
