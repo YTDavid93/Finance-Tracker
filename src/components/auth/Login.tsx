@@ -6,6 +6,8 @@ import useAuthAction from "../../hooks/useAuthAction";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../Firebase/Firebase";
 import { signWithGooglePopup } from "../../Firebase/googleSignIn";
+import ErrorMessage from "../../utils/ErrorMessage";
+import { Loader } from "../../utils/Loading";
 
 const schema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
@@ -58,9 +60,7 @@ const Login = () => {
             id="email"
             className="w-full px-3 py-2 rounded-md border focus:outline-none focus:ring focus:border-blue-300"
           />
-          {errors.email && (
-            <p className="text-red-500 text-sm">{errors.email.message}</p>
-          )}
+          {errors.email && <ErrorMessage>{errors.email.message}</ErrorMessage>}
         </div>
 
         <div className="mb-3">
@@ -72,15 +72,17 @@ const Login = () => {
             className="w-full px-3 py-2 rounded-md border focus:outline-none focus:ring focus:border-blue-300"
           />
           {errors.password && (
-            <p className="text-red-500 text-sm">{errors.password.message}</p>
+            <ErrorMessage>{errors.password.message}</ErrorMessage>
           )}
         </div>
 
-        {error && <p className=" text-red-500 text-sm">{error}</p>}
+        {error && <ErrorMessage>{error}</ErrorMessage>}
 
         <div className="flex flex-col gap-3">
-          <button className="bg-white rounded-lg w-full text-customBlue text-base px-4 py-2 border border-customBlue hover:bg-blue-600 hover:text-white transition-all duration-200 ease-in-out mt-2">
-            {loading ? "Logging Account...." : "LogIn with Email"}
+          <button className="bg-white rounded-lg w-full text-customBlue text-base px-4 py-2 border border-customBlue hover:bg-blue-600 hover:text-white transition-all duration-200 ease-in-out mt-2"
+            disabled={loading}
+          >
+            {loading ? <Loader /> : "LogIn with Email"}
           </button>
 
           <h3 className="text-center text-base">or</h3>
@@ -88,6 +90,7 @@ const Login = () => {
           <button
             className="bg-blue-500 rounded-lg text-white text-base w-full px-4 py-2 hover:bg-white hover:text-customBlue hover:border hover:border-customBlue transition-all duration-200 ease-in-out"
             onClick={logGoogleUser}
+            disabled={loading}
           >
             LogIn with Google
           </button>
