@@ -1,13 +1,40 @@
-import NavBar from "./components/NavBar";
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
+import SignUp from "./components/auth/SignUp";
+import Login from "./components/auth/Login";
+import ProtectedRoute from "./utils/ProtectedRoute";
+import MainLayout from "./components/MainLayout";
+import DashBoard from "./components/DashBoard";
+
+const routes = createBrowserRouter([
+  {
+    path: "/",
+    element: (
+      <ProtectedRoute>
+        <MainLayout />
+      </ProtectedRoute>
+    ),
+    children: [
+      {
+        path: "/",
+        element: <DashBoard />,
+      },
+    ],
+  },
+  {
+    path: "/sign-up",
+    element: <SignUp />,
+  },
+  {
+    path: "/login",
+    element: <Login />,
+  },
+]);
 
 const App = () => {
-  return (
-    <main>
-      <NavBar>
-        <h1 className="text-white">Financly.</h1>
-      </NavBar>
-    </main>
-  );
-}
+  return <RouterProvider router={routes} />;
+};
 
-export default App
+export default App;
