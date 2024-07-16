@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { ToastError } from "../utils/ToastError";
 import { UserCredential } from "firebase/auth";
 
 interface Props {
