@@ -1,5 +1,5 @@
 import { Outlet, useNavigate } from "react-router-dom";
-import NavBar from "./NavBar";
+import NavBar from "./Header/NavBar";
 import useAuth from "../hooks/useAuth";
 
 const MainLayout = () => {
