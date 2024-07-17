@@ -1,10 +1,11 @@
+import TotalIncomeForm from "./totalIncome/TotalIncomeForm";
 
-const DashBoard = () => {
+const Dashboard = () => {
   return (
-    <div>
-      <h1>This is dashboard page.</h1>
-    </div>
-  )
-}
+    <>
+      <TotalIncomeForm onSubmit={(data) => console.log(data)} />
+    </>
+  );
+};
 
-export default DashBoard
+export default Dashboard;
