@@ -18,7 +18,7 @@ const routes = createBrowserRouter([
     ),
     children: [
       {
-        path: "/",
+        index: true,
         element: <DashBoard />,
       },
     ],
