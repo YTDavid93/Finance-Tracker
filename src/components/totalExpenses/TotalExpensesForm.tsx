@@ -11,6 +11,10 @@ import {
 import ErrorMessage from "../../utils/ErrorMessage";
 import expenseCategory from "./expenseCategory";
 
+interface Props {
+  onSubmit: (data: FormData) => void;
+}
+
 const schema = z.object({
   name: z
     .string()
@@ -27,7 +31,7 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
-const TotalExpensesForm = () => {
+const TotalExpensesForm = ({ onSubmit }: Props) => {
   const {
     register,
     handleSubmit,
@@ -49,7 +53,7 @@ const TotalExpensesForm = () => {
           <form
             method="post"
             className="p-3"
-            onSubmit={handleSubmit((data) => console.log(data))}
+            onSubmit={handleSubmit(onSubmit)}
           >
             <div className="mb-3">
               <label

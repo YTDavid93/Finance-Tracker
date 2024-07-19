@@ -5,7 +5,7 @@ const Dashboard = () => {
   return (
     <>
       <TotalIncomeForm onSubmit={(data) => console.log(data)} />
-      <TotalExpensesForm />
+      <TotalExpensesForm onSubmit={(data) => console.log(data)} />
     </>
   );
 };
