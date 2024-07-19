@@ -10,6 +10,7 @@ import {
 } from "../ui/dialog";
 import ErrorMessage from "../../utils/ErrorMessage";
 import expenseCategory from "./expenseCategory";
+import filterCategory from "../expenseFilter/filterCategory";
 
 interface Props {
   onSubmit: (data: FormDataExpense) => void;
@@ -23,6 +24,9 @@ const schema = z.object({
     .number({ invalid_type_error: "Please input the expense amount!" })
     .min(0.01)
     .max(1000000),
+  type: z.enum(filterCategory, {
+    errorMap: () => ({ message: "Please select the type!" }),
+  }),
   date: z.string().min(1, { message: "Please select the expense date!" }),
   tag: z.enum(expenseCategory, {
     errorMap: () => ({ message: "Please select the tag!" }),
@@ -57,8 +61,8 @@ const TotalExpensesForm = ({ onSubmit }: Props) => {
             onSubmit={handleSubmit((data) => {
               onSubmit(data);
               reset();
-              setOpen(false)
-          })}
+              setOpen(false);
+            })}
           >
             <div className="mb-3">
               <label
@@ -95,6 +99,30 @@ const TotalExpensesForm = ({ onSubmit }: Props) => {
               />
               {errors.amount && (
                 <ErrorMessage>{errors.amount.message}</ErrorMessage>
+              )}
+            </div>
+
+            <div className="mb-3">
+              <label
+                htmlFor="type"
+                className="block text-base font-medium text-gray-700"
+              >
+                Type
+              </label>
+              <select
+                {...register("type")}
+                id="type"
+                className="w-full px-3 py-2 rounded-md border focus:outline-none focus:ring focus:border-blue-300"
+              >
+                <option value=""></option>
+                {filterCategory.map((category) => (
+                  <option key={category} value={category}>
+                    {category}
+                  </option>
+                ))}
+              </select>
+              {errors.type && (
+                <ErrorMessage>{errors.type.message}</ErrorMessage>
               )}
             </div>
 

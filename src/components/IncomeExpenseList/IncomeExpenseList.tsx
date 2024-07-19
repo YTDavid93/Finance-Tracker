@@ -8,11 +8,13 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
+import { MdOutlineDelete } from "react-icons/md";
 
 export interface ExpenseIncome {
   id: number;
   name: string;
   amount: number;
+  type: string;
   date: string;
   tag: string;
 }
@@ -31,6 +33,7 @@ const IncomeExpenseList = ({ expensesincomes, onDelete }: Props) => {
           <TableRow>
             <TableHead>Name</TableHead>
             <TableHead>Amount</TableHead>
+            <TableHead>Type</TableHead>
             <TableHead>Date</TableHead>
             <TableHead>Tag</TableHead>
             <TableHead>Action</TableHead>
@@ -42,16 +45,23 @@ const IncomeExpenseList = ({ expensesincomes, onDelete }: Props) => {
               <TableRow key={el.id}>
                 <TableCell className="font-medium">{el.name}</TableCell>
                 <TableCell>{el.amount}</TableCell>
+                <TableCell>{el.type}</TableCell>
                 <TableCell>{el.date}</TableCell>
                 <TableCell>{el.tag}</TableCell>
                 <TableCell>
-                  <button onClick={() => onDelete(el.id)}>Delete</button>
+                  <button>
+                    <MdOutlineDelete
+                      className="text-red-500"
+                      size={20}
+                      onClick={() => onDelete(el.id)}
+                    />
+                  </button>
                 </TableCell>
               </TableRow>
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={5} className="text-center py-4">
+              <TableCell colSpan={6} className="text-center py-4">
                 No Records Found
               </TableCell>
             </TableRow>

@@ -7,11 +7,13 @@ import { SubmitHandler } from "react-hook-form";
 import TotalExpensesForm, {
   FormDataExpense,
 } from "./totalExpenses/TotalExpensesForm";
+import ExpenseFilter from "./expenseFilter/ExpenseFilter";
 
 const Dashboard = () => {
-  // const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
 
   const [expenses, setExpenses] = useState<ExpenseIncome[]>([]);
+  // console.log(expenses)
   // const visibleExpenseIncome = selectedCategory ? expenses.filter((expense) => expense.ta)
 
   const onSubmitIncome: SubmitHandler<FormDataIncome> = (data) => {
@@ -22,13 +24,19 @@ const Dashboard = () => {
     setExpenses([...expenses, { ...data, id: expenses.length + 1 }]);
   };
 
+  const visibleExpenseIncome = selectedCategory
+    ? expenses.filter((expense) => expense.type === selectedCategory)
+    : expenses;
 
   return (
     <>
       <TotalIncomeForm onSubmit={onSubmitIncome} />
       <TotalExpensesForm onSubmit={onSubmitExpense} />
+      <ExpenseFilter
+        onSelectCategory={(category) => setSelectedCategory(category)}
+      />
       <IncomeExpenseList
-        expensesincomes={expenses}
+        expensesincomes={visibleExpenseIncome}
         onDelete={(id) => setExpenses(expenses.filter((el) => el.id !== id))}
       />
     </>
