@@ -7,7 +7,6 @@ import { SubmitHandler } from "react-hook-form";
 import TotalExpensesForm, {
   FormDataExpense,
 } from "./totalExpenses/TotalExpensesForm";
-import { PopoverTrigger } from "@radix-ui/react-popover";
 
 const Dashboard = () => {
   // const [selectedCategory, setSelectedCategory] = useState("");
