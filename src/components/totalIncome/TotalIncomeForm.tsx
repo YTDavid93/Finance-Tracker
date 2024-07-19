@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import expenseCategory from "./expenseCategory";
+import incomeCategory from "./incomeCategory";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import ErrorMessage from "../../utils/ErrorMessage";
@@ -24,7 +24,7 @@ const schema = z.object({
     .min(0.01)
     .max(1000000),
   date: z.string().min(1, { message: "Please select the income date!" }),
-  tag: z.enum(expenseCategory, {
+  tag: z.enum(incomeCategory, {
     errorMap: () => ({ message: "Please select the tag!" }),
   }),
 });
@@ -120,7 +120,7 @@ const TotalIncome = ({ onSubmit }: Props) => {
                 className="w-full px-3 py-2 rounded-md border focus:outline-none focus:ring focus:border-blue-300"
               >
                 <option value=""></option>
-                {expenseCategory.map((category) => (
+                {incomeCategory.map((category) => (
                   <option key={category} value={category}>
                     {category}
                   </option>
@@ -128,7 +128,9 @@ const TotalIncome = ({ onSubmit }: Props) => {
               </select>
               {errors.tag && <ErrorMessage>{errors.tag.message}</ErrorMessage>}
             </div>
-            <button>Add Income</button>
+            <button className="bg-blue-500 rounded-lg text-white text-base w-full px-4 py-2 hover:bg-white hover:text-customBlue hover:border hover:border-customBlue transition-all duration-200 ease-in mt-3">
+              Add Income
+            </button>
           </form>
         </DialogContent>
       </Dialog>
