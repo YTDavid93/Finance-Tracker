@@ -12,7 +12,7 @@ import ErrorMessage from "../../utils/ErrorMessage";
 import expenseCategory from "./expenseCategory";
 
 interface Props {
-  onSubmit: (data: FormData) => void;
+  onSubmit: (data: FormDataExpense) => void;
 }
 
 const schema = z.object({
@@ -29,14 +29,15 @@ const schema = z.object({
   }),
 });
 
-type FormData = z.infer<typeof schema>;
+export type FormDataExpense = z.infer<typeof schema>;
 
 const TotalExpensesForm = ({ onSubmit }: Props) => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
-  } = useForm<FormData>({ resolver: zodResolver(schema) });
+  } = useForm<FormDataExpense>({ resolver: zodResolver(schema) });
 
   const [open, setOpen] = useState(false);
 
@@ -53,7 +54,11 @@ const TotalExpensesForm = ({ onSubmit }: Props) => {
           <form
             method="post"
             className="p-3"
-            onSubmit={handleSubmit(onSubmit)}
+            onSubmit={handleSubmit((data) => {
+              onSubmit(data);
+              reset();
+              setOpen(false)
+          })}
           >
             <div className="mb-3">
               <label

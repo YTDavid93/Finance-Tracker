@@ -12,7 +12,7 @@ import {
 } from "../ui/dialog";
 
 interface Props {
-  onSubmit: (data: FormData) => void;
+  onSubmit: (data: FormDataIncome) => void;
 }
 
 const schema = z.object({
@@ -29,14 +29,15 @@ const schema = z.object({
   }),
 });
 
-type FormData = z.infer<typeof schema>;
+export type FormDataIncome = z.infer<typeof schema>;
 
 const TotalIncome = ({ onSubmit }: Props) => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
-  } = useForm<FormData>({ resolver: zodResolver(schema) });
+  } = useForm<FormDataIncome>({ resolver: zodResolver(schema) });
 
   const [open, setOpen] = useState(false);
 
@@ -50,7 +51,15 @@ const TotalIncome = ({ onSubmit }: Props) => {
         </DialogTrigger>
         <DialogContent className="bg-white p-6 rounded-md shadow-lg max-w-md w-full">
           <DialogTitle>Add Income</DialogTitle>
-          <form method="post" className="p-3" onSubmit={handleSubmit(onSubmit)}>
+          <form
+            method="post"
+            className="p-3"
+            onSubmit={handleSubmit((data) => {
+              onSubmit(data)
+              reset();
+              setOpen(false)
+            })}
+          >
             <div className="mb-3">
               <label
                 htmlFor="name"
