@@ -19,9 +19,10 @@ export interface ExpenseIncome {
 
 interface Props {
   expensesincomes: ExpenseIncome[];
+  onDelete: (id: number) => void;
 }
 
-const IncomeExpenseList = ({ expensesincomes }: Props) => {
+const IncomeExpenseList = ({ expensesincomes, onDelete }: Props) => {
   return (
     <section className="px-8">
       <Table className="bg-white rounded-md">
@@ -44,7 +45,7 @@ const IncomeExpenseList = ({ expensesincomes }: Props) => {
                 <TableCell>{el.date}</TableCell>
                 <TableCell>{el.tag}</TableCell>
                 <TableCell>
-                  <button>Delete</button>
+                  <button onClick={() => onDelete(el.id)}>Delete</button>
                 </TableCell>
               </TableRow>
             ))

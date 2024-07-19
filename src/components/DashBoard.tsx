@@ -4,7 +4,10 @@ import IncomeExpenseList, {
   ExpenseIncome,
 } from "./IncomeExpenseList/IncomeExpenseList";
 import { SubmitHandler } from "react-hook-form";
-import TotalExpensesForm, { FormDataExpense } from "./totalExpenses/TotalExpensesForm";
+import TotalExpensesForm, {
+  FormDataExpense,
+} from "./totalExpenses/TotalExpensesForm";
+import { PopoverTrigger } from "@radix-ui/react-popover";
 
 const Dashboard = () => {
   // const [selectedCategory, setSelectedCategory] = useState("");
@@ -20,11 +23,15 @@ const Dashboard = () => {
     setExpenses([...expenses, { ...data, id: expenses.length + 1 }]);
   };
 
+
   return (
     <>
       <TotalIncomeForm onSubmit={onSubmitIncome} />
       <TotalExpensesForm onSubmit={onSubmitExpense} />
-      <IncomeExpenseList expensesincomes={expenses} />
+      <IncomeExpenseList
+        expensesincomes={expenses}
+        onDelete={(id) => setExpenses(expenses.filter((el) => el.id !== id))}
+      />
     </>
   );
 };
