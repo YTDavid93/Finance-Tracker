@@ -31,20 +31,6 @@ const Dashboard = () => {
     ]);
   };
 
-  // filter loic
-  /*   const visibleExpenseIncome =
-    selectedCategory === "All"
-      ? expenses
-      : expenses.filter((expense) => expense.type === selectedCategory);
-
-  
-   // search by name logic
-    const visibleSearchByName = search
-      ? expenses.filter((expense) =>
-          expense.type.includes(search)
-        )
-      : expenses; */
-
   const visibleExpenseIncome = expenses.filter((expense) => {
     const matchesCategory =
       selectedCategory === "All" || expense.type === selectedCategory;
