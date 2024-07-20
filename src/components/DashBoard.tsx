@@ -10,23 +10,29 @@ import TotalExpensesForm, {
 import ExpenseFilter from "./expenseFilter/ExpenseFilter";
 
 const Dashboard = () => {
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
 
   const [expenses, setExpenses] = useState<ExpenseIncome[]>([]);
-  // console.log(expenses)
-  // const visibleExpenseIncome = selectedCategory ? expenses.filter((expense) => expense.ta)
+  console.log(expenses);
 
   const onSubmitIncome: SubmitHandler<FormDataIncome> = (data) => {
-    setExpenses([...expenses, { ...data, id: expenses.length + 1 }]);
+    setExpenses([
+      ...expenses,
+      { ...data, id: expenses.length + 1, type: "Income" },
+    ]);
   };
 
   const onSubmitExpense: SubmitHandler<FormDataExpense> = (data) => {
-    setExpenses([...expenses, { ...data, id: expenses.length + 1 }]);
+    setExpenses([
+      ...expenses,
+      { ...data, id: expenses.length + 1, type: "Expense" },
+    ]);
   };
 
-  const visibleExpenseIncome = selectedCategory
-    ? expenses.filter((expense) => expense.type === selectedCategory)
-    : expenses;
+  const visibleExpenseIncome =
+    selectedCategory === "All"
+      ? expenses
+      : expenses.filter((expense) => expense.type === selectedCategory);
 
   return (
     <>

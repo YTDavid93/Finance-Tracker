@@ -1,3 +1,11 @@
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 import filterCategory from "./filterCategory";
 
 interface Props {
@@ -6,14 +14,20 @@ interface Props {
 
 const ExpenseFilter = ({ onSelectCategory }: Props) => {
   return (
-    <select onChange={(e) => onSelectCategory(e.target.value)}>
-      <option value="">All</option>
-      {filterCategory.map((category) => (
-        <option key={category} value={category}>
-          {category}
-        </option>
-      ))}
-    </select>
+    <Select defaultValue="All" onValueChange={(value) => onSelectCategory(value)}>
+      <SelectTrigger className="w-[280px]">
+        <SelectValue />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectGroup>
+          {filterCategory.map((category) => (
+            <SelectItem key={category} value={category}>
+              {category}
+            </SelectItem>
+          ))}
+        </SelectGroup>
+      </SelectContent>
+    </Select>
   );
 };
 

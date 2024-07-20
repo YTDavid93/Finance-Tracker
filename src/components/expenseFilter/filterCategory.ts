@@ -1,3 +1,3 @@
-const filterCategory = ["Income", "Expense"] as const;
+const filterCategory = ["All", "Income", "Expense"] as const;
 
 export default filterCategory;
