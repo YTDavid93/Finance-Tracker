@@ -8,12 +8,14 @@ import TotalExpensesForm, {
   FormDataExpense,
 } from "./totalExpenses/TotalExpensesForm";
 import ExpenseFilter from "./expenseFilter/ExpenseFilter";
+import SearchInput from "./search/SearchInput";
 
 const Dashboard = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
 
+  const [search, setSeaarch] = useState("");
+
   const [expenses, setExpenses] = useState<ExpenseIncome[]>([]);
-  console.log(expenses);
 
   const onSubmitIncome: SubmitHandler<FormDataIncome> = (data) => {
     setExpenses([
@@ -29,18 +31,39 @@ const Dashboard = () => {
     ]);
   };
 
-  const visibleExpenseIncome =
+  // filter loic
+  /*   const visibleExpenseIncome =
     selectedCategory === "All"
       ? expenses
       : expenses.filter((expense) => expense.type === selectedCategory);
+
+  
+   // search by name logic
+    const visibleSearchByName = search
+      ? expenses.filter((expense) =>
+          expense.type.includes(search)
+        )
+      : expenses; */
+
+  const visibleExpenseIncome = expenses.filter((expense) => {
+    const matchesCategory =
+      selectedCategory === "All" || expense.type === selectedCategory;
+    const matchesSearch =
+      search === "" ||
+      expense.type.toLowerCase().includes(search.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
 
   return (
     <>
       <TotalIncomeForm onSubmit={onSubmitIncome} />
       <TotalExpensesForm onSubmit={onSubmitExpense} />
-      <ExpenseFilter
-        onSelectCategory={(category) => setSelectedCategory(category)}
-      />
+      <div className=" flex items-center">
+        <SearchInput onSearch={(serchText) => setSeaarch(serchText)} />
+        <ExpenseFilter
+          onSelectCategory={(category) => setSelectedCategory(category)}
+        />
+      </div>
       <IncomeExpenseList
         expensesincomes={visibleExpenseIncome}
         onDelete={(id) => setExpenses(expenses.filter((el) => el.id !== id))}
