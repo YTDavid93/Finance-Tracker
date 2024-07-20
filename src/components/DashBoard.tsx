@@ -44,7 +44,7 @@ const Dashboard = () => {
     <>
       <TotalIncomeForm onSubmit={onSubmitIncome} />
       <TotalExpensesForm onSubmit={onSubmitExpense} />
-      <div className=" flex items-center">
+      <div className=" flex items-center justify-between px-8 gap-x-4">
         <SearchInput onSearch={(serchText) => setSeaarch(serchText)} />
         <ExpenseFilter
           onSelectCategory={(category) => setSelectedCategory(category)}

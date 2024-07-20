@@ -15,7 +15,7 @@ interface Props {
 const ExpenseFilter = ({ onSelectCategory }: Props) => {
   return (
     <Select defaultValue="All" onValueChange={(value) => onSelectCategory(value)}>
-      <SelectTrigger className="w-[280px]">
+      <SelectTrigger className="max-w-[280px]">
         <SelectValue />
       </SelectTrigger>
       <SelectContent>
