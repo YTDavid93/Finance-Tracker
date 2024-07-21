@@ -11,7 +11,7 @@ import {
 import { MdOutlineDelete } from "react-icons/md";
 
 export interface ExpenseIncome {
-  id: number;
+  id: string;
   name: string;
   amount: number;
   type: string;
@@ -21,7 +21,7 @@ export interface ExpenseIncome {
 
 interface Props {
   expensesincomes: ExpenseIncome[];
-  onDelete: (id: number) => void;
+  onDelete: (id: string) => void;
 }
 
 const IncomeExpenseList = ({ expensesincomes, onDelete }: Props) => {

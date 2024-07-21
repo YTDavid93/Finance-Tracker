@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TotalIncomeForm, { FormDataIncome } from "./totalIncome/TotalIncomeForm";
 import IncomeExpenseList, {
   ExpenseIncome,
@@ -9,7 +9,7 @@ import TotalExpensesForm, {
 } from "./totalExpenses/TotalExpensesForm";
 import ExpenseFilter from "./expenseFilter/ExpenseFilter";
 import SearchInput from "./search/SearchInput";
-import { addFinance } from "../Firebase/fireStore";
+import { addFinance, getFinance } from "../Firebase/fireStore";
 import useAuth from "../hooks/useAuth";
 
 const Dashboard = () => {
@@ -21,13 +21,40 @@ const Dashboard = () => {
 
   const { user } = useAuth();
 
+  const [loading, setLoading] = useState(true);
+
+  const fetchData = async (uid: string | undefined) => {
+    try {
+      const data = await getFinance(uid);
+      console.log(data)
+      setExpenses(data);
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log(error);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (user?.uid) {
+      fetchData(user.uid);
+    }
+  }, [user]);
+
   const onSubmitIncome: SubmitHandler<FormDataIncome> = async (data) => {
     try {
-      setExpenses([
-        ...expenses,
-        { ...data, id: expenses.length + 1, type: "Income" },
-      ]);
-      console.log(addFinance(user?.uid, data.name, data.amount, data.date, data.tag));
+      const newIncome = { ...data, id: `${expenses.length + 1}`, type: "Income" };
+      setExpenses([...expenses, newIncome]);
+      addFinance(
+        user?.uid,
+        data.name,
+        data.amount,
+        data.date,
+        data.tag,
+        "Income"
+      );
     } catch (error) {
       if (error instanceof Error) {
         console.log(error);
@@ -35,11 +62,23 @@ const Dashboard = () => {
     }
   };
 
-  const onSubmitExpense: SubmitHandler<FormDataExpense> = (data) => {
-    setExpenses([
-      ...expenses,
-      { ...data, id: expenses.length + 1, type: "Expense" },
-    ]);
+  const onSubmitExpense: SubmitHandler<FormDataExpense> = async (data) => {
+    try {
+      const newExpense = { ...data, id: `${expenses.length + 1}`, type: "Expense" };
+      setExpenses([...expenses, newExpense]);
+      await addFinance(
+        user?.uid,
+        data.name,
+        data.amount,
+        data.date,
+        data.tag,
+        "Expense"
+      );
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log(error);
+      }
+    }
   };
 
   const visibleExpenseIncome = expenses.filter((expense) => {
