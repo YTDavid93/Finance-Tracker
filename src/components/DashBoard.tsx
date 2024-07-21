@@ -9,6 +9,8 @@ import TotalExpensesForm, {
 } from "./totalExpenses/TotalExpensesForm";
 import ExpenseFilter from "./expenseFilter/ExpenseFilter";
 import SearchInput from "./search/SearchInput";
+import { addFinance } from "../Firebase/fireStore";
+import useAuth from "../hooks/useAuth";
 
 const Dashboard = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -17,11 +19,20 @@ const Dashboard = () => {
 
   const [expenses, setExpenses] = useState<ExpenseIncome[]>([]);
 
-  const onSubmitIncome: SubmitHandler<FormDataIncome> = (data) => {
-    setExpenses([
-      ...expenses,
-      { ...data, id: expenses.length + 1, type: "Income" },
-    ]);
+  const { user } = useAuth();
+
+  const onSubmitIncome: SubmitHandler<FormDataIncome> = async (data) => {
+    try {
+      setExpenses([
+        ...expenses,
+        { ...data, id: expenses.length + 1, type: "Income" },
+      ]);
+      console.log(addFinance(user?.uid, data.name, data.amount, data.date, data.tag));
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log(error);
+      }
+    }
   };
 
   const onSubmitExpense: SubmitHandler<FormDataExpense> = (data) => {
