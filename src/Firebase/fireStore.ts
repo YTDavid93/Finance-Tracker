@@ -1,9 +1,12 @@
-import { ExpenseIncome } from './../components/IncomeExpenseList/IncomeExpenseList';
+import { ExpenseIncome } from "./../components/IncomeExpenseList/IncomeExpenseList";
 import {
   addDoc,
   collection,
+  doc,
+  getDoc,
   getDocs,
   query,
+  setDoc,
   where,
 } from "firebase/firestore";
 import { db } from "./Firebase";
@@ -32,7 +35,7 @@ export const addFinance = async (
   }
 };
 
-export const getFinance= async (uid: string | undefined) => {
+export const getFinance = async (uid: string | undefined) => {
   try {
     const q = query(
       collection(db, FINANCE_COLLECTION),
@@ -51,3 +54,32 @@ export const getFinance= async (uid: string | undefined) => {
     return [];
   }
 };
+
+export const updateReceipt = (
+  uid: string | undefined,
+  id: string,
+  name: string,
+  amount: number,
+  date: string,
+  tag: string,
+  type: string
+) => {
+  setDoc(doc(db, FINANCE_COLLECTION, id), {
+    uid,
+    name,
+    amount,
+    date,
+    tag,
+    type,
+  });
+};
+
+export const fetchDatForEditId = async (editId: string) => {
+  const docRef = doc(db, FINANCE_COLLECTION, editId);
+  const docSnap = await getDoc(docRef) ;
+  if (docSnap.exists()) {
+    return docSnap.data();
+  } else {
+    throw new Error("No such Document!");
+  }
+}

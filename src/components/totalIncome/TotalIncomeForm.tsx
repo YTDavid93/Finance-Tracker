@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import incomeCategory from "./incomeCategory";
 import { z } from "zod";
@@ -10,9 +9,14 @@ import {
   DialogContent,
   DialogTitle,
 } from "../ui/dialog";
+import { useCallback, useEffect } from "react";
+import { fetchDatForEditId } from "../../Firebase/fireStore";
 
 interface Props {
   onSubmit: (data: FormDataIncome) => void;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  editId: string | null;
 }
 
 const schema = z.object({
@@ -23,9 +27,6 @@ const schema = z.object({
     .number({ invalid_type_error: "Amount is required" })
     .min(0.01)
     .max(1000000),
-  // type: z.enum(filterCategory, {
-  //   errorMap: () => ({ message: "Please select the type!" }),
-  // }),
   date: z.string().min(1, { message: "Please select the income date!" }),
   tag: z.enum(incomeCategory, {
     errorMap: () => ({ message: "Please select the tag!" }),
@@ -34,33 +35,54 @@ const schema = z.object({
 
 export type FormDataIncome = z.infer<typeof schema>;
 
-const TotalIncome = ({ onSubmit }: Props) => {
+const TotalIncome = ({ onSubmit, open, onOpenChange, editId }: Props) => {
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
   } = useForm<FormDataIncome>({ resolver: zodResolver(schema) });
 
-  const [open, setOpen] = useState(false);
+  const fetchData = useCallback(
+    async (editId: string) => {
+      try {
+        const data = await fetchDatForEditId(editId);
+        setValue("name", data.name);
+        setValue("date", data.date);
+        setValue("amount", data.amount);
+        setValue("tag", data.tag);
+      } catch (err) {
+        console.error("Error fetching document:", err);
+      }
+    },
+    [setValue]
+  );
 
+  useEffect(() => {
+    if (editId) {
+      fetchData(editId);
+    } else {
+      reset();
+    }
+  }, [editId, fetchData, reset]);
+  
   return (
     <section className="p-6">
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogTrigger asChild>
           <button className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600">
             Add Income
           </button>
         </DialogTrigger>
         <DialogContent className="bg-white p-6 rounded-md shadow-lg max-w-md w-full">
-          <DialogTitle>Add Income</DialogTitle>
+          <DialogTitle>Income Form</DialogTitle>
           <form
             method="post"
             className="p-3"
             onSubmit={handleSubmit((data) => {
               onSubmit(data);
               reset();
-              setOpen(false);
             })}
           >
             <div className="mb-3">
@@ -141,7 +163,7 @@ const TotalIncome = ({ onSubmit }: Props) => {
               {errors.tag && <ErrorMessage>{errors.tag.message}</ErrorMessage>}
             </div>
             <button className="bg-blue-500 rounded-lg text-white text-base w-full px-4 py-2 hover:bg-white hover:text-customBlue hover:border hover:border-customBlue transition-all duration-200 ease-in mt-3">
-              Add Income
+              {editId ? "Update Income" : "Add Income"}
             </button>
           </form>
         </DialogContent>

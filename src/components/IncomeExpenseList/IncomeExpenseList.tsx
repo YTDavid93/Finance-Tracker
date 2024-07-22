@@ -1,7 +1,6 @@
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableFooter,
   TableHead,
@@ -22,9 +21,10 @@ export interface ExpenseIncome {
 interface Props {
   expensesincomes: ExpenseIncome[];
   onDelete: (id: string) => void;
+  onEdit: (id: string) => void;
 }
 
-const IncomeExpenseList = ({ expensesincomes, onDelete }: Props) => {
+const IncomeExpenseList = ({ expensesincomes, onDelete, onEdit }: Props) => {
   return (
     <section className="px-8">
       <Table className="bg-white rounded-md">
@@ -59,7 +59,8 @@ const IncomeExpenseList = ({ expensesincomes, onDelete }: Props) => {
                   <button>
                     <MdEdit
                      className="text-blue-400"
-                      size={20}
+                     size={20}
+                     onClick={() => onEdit(el.id)}
                     />
                   </button>
                 </TableCell>

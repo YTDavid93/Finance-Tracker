@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -10,9 +9,14 @@ import {
 } from "../ui/dialog";
 import ErrorMessage from "../../utils/ErrorMessage";
 import expenseCategory from "./expenseCategory";
+import { useCallback, useEffect } from "react";
+import { fetchDatForEditId } from "../../Firebase/fireStore";
 
 interface Props {
   onSubmit: (data: FormDataExpense) => void;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  editId: string | null;
 }
 
 const schema = z.object({
@@ -31,33 +35,56 @@ const schema = z.object({
 
 export type FormDataExpense = z.infer<typeof schema>;
 
-const TotalExpensesForm = ({ onSubmit }: Props) => {
+const TotalExpensesForm = ({ onSubmit, open, onOpenChange, editId }: Props) => {
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
   } = useForm<FormDataExpense>({ resolver: zodResolver(schema) });
 
-  const [open, setOpen] = useState(false);
+  const fetchData = useCallback(
+    async (editId: string) => {
+      try {
+        const data = await fetchDatForEditId(editId);
+        setValue("name", data.name);
+        setValue("date", data.date);
+        setValue("amount", data.amount);
+        setValue("tag", data.tag);
+      } catch (err) {
+        console.error("Error fetching document:", err);
+      }
+    },
+    [setValue]
+  );
+
+  useEffect(() => {
+    if (editId) {
+      fetchData(editId);
+    } else {
+      reset();
+    }
+  }, [editId, fetchData, reset]);
 
   return (
     <section className="p-6">
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogTrigger asChild>
           <button className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600">
             Add Expenses
           </button>
         </DialogTrigger>
         <DialogContent className="bg-white p-6 rounded-md shadow-lg max-w-md w-full">
-          <DialogTitle>Add Expenses</DialogTitle>
+          <DialogTitle>
+            Expense Form
+          </DialogTitle>
           <form
             method="post"
             className="p-3"
             onSubmit={handleSubmit((data) => {
               onSubmit(data);
               reset();
-              setOpen(false);
             })}
           >
             <div className="mb-3">
@@ -138,7 +165,7 @@ const TotalExpensesForm = ({ onSubmit }: Props) => {
               {errors.tag && <ErrorMessage>{errors.tag.message}</ErrorMessage>}
             </div>
             <button className="bg-blue-500 rounded-lg text-white text-base w-full px-4 py-2 hover:bg-white hover:text-customBlue hover:border hover:border-customBlue transition-all duration-200 ease-in mt-3">
-              Add Expenses
+              {editId ? "Update Expenses" : "Add Expenses"}
             </button>
           </form>
         </DialogContent>
