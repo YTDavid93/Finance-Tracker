@@ -42,7 +42,7 @@ const Dashboard = () => {
     if (user?.uid) {
       fetchData(user.uid);
     }
-  }, [user]);
+  }, [user, fetchData]);
 
   const onSubmitIncome: SubmitHandler<FormDataIncome> = async (data) => {
     try {
@@ -93,7 +93,7 @@ const Dashboard = () => {
   const onSubmitExpense: SubmitHandler<FormDataExpense> = async (data) => {
     try {
       if (expenseId) {
-        await updateReceipt(
+         updateReceipt(
           user?.uid,
           expenseId,
           data.name,
@@ -147,7 +147,7 @@ const Dashboard = () => {
 
   // edit logic
   const handleEdit = (id: string) => {
-    console.log("id", id);
+    console.log(id)
     const dataToEdit = expenses.find((expense) => expense.id === id);
     if (dataToEdit) {
       if (dataToEdit.type === "Income") {
