@@ -9,7 +9,7 @@ import TotalExpensesForm, {
 } from "./totalExpenses/TotalExpensesForm";
 import ExpenseFilter from "./expenseFilter/ExpenseFilter";
 import SearchInput from "./search/SearchInput";
-import { addFinance, getFinance, updateReceipt } from "../Firebase/fireStore";
+import { addFinance, deleteReceipt, getFinance, updateReceipt } from "../Firebase/fireStore";
 import useAuth from "../hooks/useAuth";
 import { toast } from "react-toastify";
 import { ToastError } from "../utils/ToastError";
@@ -160,6 +160,20 @@ const Dashboard = () => {
     }
   };
 
+  //Delete logic
+  const handleDelete = async (id: string) => {
+     try {
+       await deleteReceipt(id);
+       setExpenses(expenses.filter((el) => el.id !== id));
+       toast.success("Data deleted Successfully");
+     }
+     catch (error) {
+       if (error instanceof Error) {
+         ToastError.serialize(error);
+       }
+     }
+  }
+
   const handleIncomeModal = (open: boolean) => {
     setIncomeId(null);
     setOpenIncome(open);
@@ -193,7 +207,7 @@ const Dashboard = () => {
       <IncomeExpenseList
         onEdit={handleEdit}
         expensesincomes={visibleExpenseIncome}
-        onDelete={(id) => setExpenses(expenses.filter((el) => el.id !== id))}
+        onDelete={handleDelete}
       />
     </>
   );

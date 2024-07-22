@@ -2,6 +2,7 @@ import { ExpenseIncome } from "./../components/IncomeExpenseList/IncomeExpenseLi
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
@@ -82,4 +83,8 @@ export const fetchDatForEditId = async (editId: string) => {
   } else {
     throw new Error("No such Document!");
   }
+}
+
+export const deleteReceipt = (id: string) => {
+  deleteDoc(doc(db, FINANCE_COLLECTION, id));
 }

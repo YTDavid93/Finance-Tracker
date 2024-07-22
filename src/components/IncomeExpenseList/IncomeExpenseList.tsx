@@ -1,3 +1,4 @@
+import DeleteDialog from "../ui/DeleteDialog";
 import {
   Table,
   TableBody,
@@ -7,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
-import { MdOutlineDelete, MdEdit } from "react-icons/md";
+import { MdEdit } from "react-icons/md";
 
 export interface ExpenseIncome {
   id: string;
@@ -49,18 +50,12 @@ const IncomeExpenseList = ({ expensesincomes, onDelete, onEdit }: Props) => {
                 <TableCell>{el.date}</TableCell>
                 <TableCell>{el.tag}</TableCell>
                 <TableCell>
-                  <button className="mr-3">
-                    <MdOutlineDelete
-                      className="text-red-500"
-                      size={20}
-                      onClick={() => onDelete(el.id)}
-                    />
-                  </button>
+                  <DeleteDialog onDelete={() => onDelete(el.id)} />
                   <button>
                     <MdEdit
-                     className="text-blue-400"
-                     size={20}
-                     onClick={() => onEdit(el.id)}
+                      className="text-blue-400"
+                      size={20}
+                      onClick={() => onEdit(el.id)}
                     />
                   </button>
                 </TableCell>
