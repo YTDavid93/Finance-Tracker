@@ -18,6 +18,7 @@ import {
 import useAuth from "../hooks/useAuth";
 import { toast } from "react-toastify";
 import { ToastError } from "../utils/ToastError";
+import CurrentBalance from "./balance/CurrentBalance";
 
 const Dashboard = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -205,6 +206,7 @@ const Dashboard = () => {
         editId={expenseId}
         expenses={expensesOnly}
       />
+      <CurrentBalance incomes={incomesOnly} expenses={expensesOnly} />
       <div className=" flex items-center justify-between px-8 gap-x-4">
         <SearchInput onSearch={(serchText) => setSeaarch(serchText)} />
         <ExpenseFilter
