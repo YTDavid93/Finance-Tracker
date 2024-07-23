@@ -11,12 +11,14 @@ import {
 } from "../ui/dialog";
 import { useCallback, useEffect } from "react";
 import { fetchDatForEditId } from "../../Firebase/fireStore";
+import { ExpenseIncome } from "../IncomeExpenseList/IncomeExpenseList";
 
 interface Props {
   onSubmit: (data: FormDataIncome) => void;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   editId: string | null;
+  incomes: ExpenseIncome[];
 }
 
 const schema = z.object({
@@ -35,7 +37,13 @@ const schema = z.object({
 
 export type FormDataIncome = z.infer<typeof schema>;
 
-const TotalIncome = ({ onSubmit, open, onOpenChange, editId }: Props) => {
+const TotalIncome = ({
+  onSubmit,
+  open,
+  onOpenChange,
+  incomes,
+  editId,
+}: Props) => {
   const {
     register,
     handleSubmit,
@@ -66,9 +74,15 @@ const TotalIncome = ({ onSubmit, open, onOpenChange, editId }: Props) => {
       reset();
     }
   }, [editId, fetchData, reset]);
-  
+
+  const totalIncome = incomes
+    .reduce((prevVal, currVal) => currVal.amount + prevVal, 0)
+    .toFixed(2);
+
   return (
     <section className="p-6">
+      <h1>Total Income</h1>
+      <p>Rs {totalIncome}</p>
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogTrigger asChild>
           <button className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600">

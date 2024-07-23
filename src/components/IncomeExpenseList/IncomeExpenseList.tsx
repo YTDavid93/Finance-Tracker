@@ -2,6 +2,7 @@ import DeleteDialog from "../ui/DeleteDialog";
 import {
   Table,
   TableBody,
+  TableCaption,
   TableCell,
   TableFooter,
   TableHead,
@@ -29,8 +30,15 @@ const IncomeExpenseList = ({ expensesincomes, onDelete, onEdit }: Props) => {
   return (
     <section className="px-8">
       <Table className="bg-white rounded-md">
-        {/* <TableCaption>My Transactions</TableCaption> */}
+        <TableCaption className="flex"></TableCaption>
         <TableHeader>
+          {/* <TableCaption className="flex justify-around">
+            <h1>My transaction</h1>
+            <div>
+              <button>Export to CSC</button>
+              <button>Import From CSV</button>
+            </div>
+          </TableCaption> */}
           <TableRow>
             <TableHead>Name</TableHead>
             <TableHead>Amount</TableHead>

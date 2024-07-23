@@ -9,7 +9,12 @@ import TotalExpensesForm, {
 } from "./totalExpenses/TotalExpensesForm";
 import ExpenseFilter from "./expenseFilter/ExpenseFilter";
 import SearchInput from "./search/SearchInput";
-import { addFinance, deleteReceipt, getFinance, updateReceipt } from "../Firebase/fireStore";
+import {
+  addFinance,
+  deleteReceipt,
+  getFinance,
+  updateReceipt,
+} from "../Firebase/fireStore";
 import useAuth from "../hooks/useAuth";
 import { toast } from "react-toastify";
 import { ToastError } from "../utils/ToastError";
@@ -19,7 +24,6 @@ const Dashboard = () => {
   const [search, setSeaarch] = useState("");
   const [expenses, setExpenses] = useState<ExpenseIncome[]>([]);
   const { user } = useAuth();
-  const [loading, setLoading] = useState(true);
   const [openIncome, setOpenIncome] = useState(false);
   const [openExpense, setOpenExpense] = useState(false);
   const [incomeId, setIncomeId] = useState<string | null>(null);
@@ -33,9 +37,7 @@ const Dashboard = () => {
       if (error instanceof Error) {
         console.log(error);
       }
-    } finally {
-      setLoading(false);
-    }
+    } 
   };
 
   useEffect(() => {
@@ -47,7 +49,7 @@ const Dashboard = () => {
   const onSubmitIncome: SubmitHandler<FormDataIncome> = async (data) => {
     try {
       if (incomeId) {
-        await updateReceipt(
+        updateReceipt(
           user?.uid,
           incomeId,
           data.name,
@@ -85,15 +87,16 @@ const Dashboard = () => {
       if (error instanceof Error) {
         ToastError.serialize(error);
       }
+    } finally {
+      setOpenIncome(false);
+      setIncomeId(null);
     }
-    setOpenIncome(false);
-    setIncomeId(null);
   };
 
   const onSubmitExpense: SubmitHandler<FormDataExpense> = async (data) => {
     try {
       if (expenseId) {
-         updateReceipt(
+        updateReceipt(
           user?.uid,
           expenseId,
           data.name,
@@ -145,9 +148,12 @@ const Dashboard = () => {
     return matchesCategory && matchesSearch;
   });
 
+  // Separate expenses and incomes
+  const expensesOnly = expenses.filter((expense) => expense.type === "Expense");
+  const incomesOnly = expenses.filter((expense) => expense.type === "Income");
+
   // edit logic
   const handleEdit = (id: string) => {
-    console.log(id)
     const dataToEdit = expenses.find((expense) => expense.id === id);
     if (dataToEdit) {
       if (dataToEdit.type === "Income") {
@@ -162,17 +168,16 @@ const Dashboard = () => {
 
   //Delete logic
   const handleDelete = async (id: string) => {
-     try {
-       await deleteReceipt(id);
-       setExpenses(expenses.filter((el) => el.id !== id));
-       toast.success("Data deleted Successfully");
-     }
-     catch (error) {
-       if (error instanceof Error) {
-         ToastError.serialize(error);
-       }
-     }
-  }
+    try {
+      await deleteReceipt(id);
+      setExpenses(expenses.filter((el) => el.id !== id));
+      toast.success("Data deleted Successfully");
+    } catch (error) {
+      if (error instanceof Error) {
+        ToastError.serialize(error);
+      }
+    }
+  };
 
   const handleIncomeModal = (open: boolean) => {
     setIncomeId(null);
@@ -191,12 +196,14 @@ const Dashboard = () => {
         onOpenChange={handleIncomeModal}
         onSubmit={onSubmitIncome}
         editId={incomeId}
+        incomes={incomesOnly}
       />
       <TotalExpensesForm
         open={openExpense}
         onOpenChange={handleExpenseModal}
         onSubmit={onSubmitExpense}
         editId={expenseId}
+        expenses={expensesOnly}
       />
       <div className=" flex items-center justify-between px-8 gap-x-4">
         <SearchInput onSearch={(serchText) => setSeaarch(serchText)} />

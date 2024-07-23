@@ -11,12 +11,14 @@ import ErrorMessage from "../../utils/ErrorMessage";
 import expenseCategory from "./expenseCategory";
 import { useCallback, useEffect } from "react";
 import { fetchDatForEditId } from "../../Firebase/fireStore";
+import { ExpenseIncome } from "../IncomeExpenseList/IncomeExpenseList";
 
 interface Props {
   onSubmit: (data: FormDataExpense) => void;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   editId: string | null;
+  expenses: ExpenseIncome[];
 }
 
 const schema = z.object({
@@ -35,7 +37,13 @@ const schema = z.object({
 
 export type FormDataExpense = z.infer<typeof schema>;
 
-const TotalExpensesForm = ({ onSubmit, open, onOpenChange, editId }: Props) => {
+const TotalExpensesForm = ({
+  onSubmit,
+  open,
+  onOpenChange,
+  editId,
+  expenses,
+}: Props) => {
   const {
     register,
     handleSubmit,
@@ -43,6 +51,10 @@ const TotalExpensesForm = ({ onSubmit, open, onOpenChange, editId }: Props) => {
     setValue,
     formState: { errors },
   } = useForm<FormDataExpense>({ resolver: zodResolver(schema) });
+
+  const totalExpense = expenses
+    .reduce((prevVal, currVal) => currVal.amount + prevVal, 0)
+    .toFixed(2);
 
   const fetchData = useCallback(
     async (editId: string) => {
@@ -69,6 +81,10 @@ const TotalExpensesForm = ({ onSubmit, open, onOpenChange, editId }: Props) => {
 
   return (
     <section className="p-6">
+      <h1>Total Expenses</h1>
+      <p>
+        Rs{totalExpense}
+      </p>
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogTrigger asChild>
           <button className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600">
@@ -76,9 +92,7 @@ const TotalExpensesForm = ({ onSubmit, open, onOpenChange, editId }: Props) => {
           </button>
         </DialogTrigger>
         <DialogContent className="bg-white p-6 rounded-md shadow-lg max-w-md w-full">
-          <DialogTitle>
-            Expense Form
-          </DialogTitle>
+          <DialogTitle>Expense Form</DialogTitle>
           <form
             method="post"
             className="p-3"
