@@ -19,9 +19,9 @@ const CurrentBalance = ({ incomes, expenses }: Props) => {
   const totalCurrentBalance = totalIncome - totalExpense;
 
   return (
-    <div>
-      <h1>Current Balance</h1>
-      <p>Rs{totalCurrentBalance}</p>
+    <div className="bg-white rounded-md shadow-lg p-6 min-w-[400px] flex-1 flex flex-col gap-4">
+      <h1 className="font-medium text-lg">Current Balance</h1>
+      <p>Rs {totalCurrentBalance.toFixed(2)}</p>
     </div>
   );
 };

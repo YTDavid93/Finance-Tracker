@@ -38,7 +38,7 @@ const Dashboard = () => {
       if (error instanceof Error) {
         console.log(error);
       }
-    } 
+    }
   };
 
   useEffect(() => {
@@ -192,21 +192,23 @@ const Dashboard = () => {
 
   return (
     <>
-      <TotalIncomeForm
-        open={openIncome}
-        onOpenChange={handleIncomeModal}
-        onSubmit={onSubmitIncome}
-        editId={incomeId}
-        incomes={incomesOnly}
-      />
-      <TotalExpensesForm
-        open={openExpense}
-        onOpenChange={handleExpenseModal}
-        onSubmit={onSubmitExpense}
-        editId={expenseId}
-        expenses={expensesOnly}
-      />
-      <CurrentBalance incomes={incomesOnly} expenses={expensesOnly} />
+      <div className="flex gap-4 flex-wrap p-6">
+        <CurrentBalance incomes={incomesOnly} expenses={expensesOnly} />
+        <TotalExpensesForm
+          open={openExpense}
+          onOpenChange={handleExpenseModal}
+          onSubmit={onSubmitExpense}
+          editId={expenseId}
+          expenses={expensesOnly}
+        />
+        <TotalIncomeForm
+          open={openIncome}
+          onOpenChange={handleIncomeModal}
+          onSubmit={onSubmitIncome}
+          editId={incomeId}
+          incomes={incomesOnly}
+        />
+      </div>
       <div className=" flex items-center justify-between px-8 gap-x-4">
         <SearchInput onSearch={(serchText) => setSeaarch(serchText)} />
         <ExpenseFilter

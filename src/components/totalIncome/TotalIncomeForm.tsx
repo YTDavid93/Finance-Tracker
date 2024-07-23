@@ -80,12 +80,12 @@ const TotalIncome = ({
     .toFixed(2);
 
   return (
-    <section className="p-6">
-      <h1>Total Income</h1>
+    <section className="bg-white rounded-md shadow-lg flex-1 p-6 flex flex-col gap-4">
+      <h1 className="font-medium text-lg">Total Income</h1>
       <p>Rs {totalIncome}</p>
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogTrigger asChild>
-          <button className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600">
+          <button className="bg-blue-500 rounded-lg text-white text-base w-full px-4 py-2 hover:bg-white hover:text-customBlue hover:border hover:border-customBlue transition-all duration-200 ease-in">
             Add Income
           </button>
         </DialogTrigger>
