@@ -1,145 +1,33 @@
-import { useEffect, useState } from "react";
-import TotalIncomeForm, { FormDataIncome } from "./totalIncome/TotalIncomeForm";
-import IncomeExpenseList, {
-  ExpenseIncome,
-} from "./IncomeExpenseList/IncomeExpenseList";
-import { SubmitHandler } from "react-hook-form";
-import TotalExpensesForm, {
-  FormDataExpense,
-} from "./totalExpenses/TotalExpensesForm";
+import { useState } from "react";
+import TotalIncomeForm from "./totalIncome/TotalIncomeForm";
+import IncomeExpenseList from "./IncomeExpenseList/IncomeExpenseList";
+import TotalExpensesForm from "./totalExpenses/TotalExpensesForm";
 import ExpenseFilter from "./expenseFilter/ExpenseFilter";
 import SearchInput from "./search/SearchInput";
-import {
-  addFinance,
-  deleteReceipt,
-  getFinance,
-  updateReceipt,
-} from "../Firebase/fireStore";
-import useAuth from "../hooks/useAuth";
+import { deleteReceipt } from "../Firebase/fireStore";
 import { toast } from "react-toastify";
 import { ToastError } from "../utils/ToastError";
 import CurrentBalance from "./balance/CurrentBalance";
+import useHandleFormSubmission from "../hooks/useHandleFormSubmission";
 
 const Dashboard = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [search, setSeaarch] = useState("");
-  const [expenses, setExpenses] = useState<ExpenseIncome[]>([]);
-  const { user } = useAuth();
-  const [openIncome, setOpenIncome] = useState(false);
-  const [openExpense, setOpenExpense] = useState(false);
-  const [incomeId, setIncomeId] = useState<string | null>(null);
-  const [expenseId, setExpenseId] = useState<string | null>(null);
+  const {
+    handleSubmitIncome,
+    handleSubmitExpense,
+    setIncomeId,
+    setExpenseId,
+    openIncome,
+    openExpense,
+    setOpenExpense,
+    setOpenIncome,
+    expenseId,
+    incomeId,
+    expenses,
+    setExpenses,
+  } = useHandleFormSubmission();
 
-  const fetchData = async (uid: string | undefined) => {
-    try {
-      const data = await getFinance(uid);
-      setExpenses(data);
-    } catch (error) {
-      if (error instanceof Error) {
-        console.log(error);
-      }
-    }
-  };
-
-  useEffect(() => {
-    if (user?.uid) {
-      fetchData(user.uid);
-    }
-  }, [user, fetchData]);
-
-  const onSubmitIncome: SubmitHandler<FormDataIncome> = async (data) => {
-    try {
-      if (incomeId) {
-        updateReceipt(
-          user?.uid,
-          incomeId,
-          data.name,
-          data.amount,
-          data.date,
-          data.tag,
-          "Income"
-        );
-        const upatedExpenses = expenses.map((expense) =>
-          expense.id === incomeId
-            ? { ...expense, ...data, type: "Income" }
-            : expense
-        );
-        setExpenses(upatedExpenses);
-        toast.success("Income Updated Successfully");
-      } else {
-        const newIncome = {
-          ...data,
-          id: `${expenses.length + 1}`,
-          type: "Income",
-        };
-        setExpenses([...expenses, newIncome]);
-        await addFinance(
-          user?.uid,
-          data.name,
-          data.amount,
-          data.date,
-          data.tag,
-          "Income"
-        );
-        toast.success("Income created Successfully");
-        setIncomeId(null);
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        ToastError.serialize(error);
-      }
-    } finally {
-      setOpenIncome(false);
-      setIncomeId(null);
-    }
-  };
-
-  const onSubmitExpense: SubmitHandler<FormDataExpense> = async (data) => {
-    try {
-      if (expenseId) {
-        updateReceipt(
-          user?.uid,
-          expenseId,
-          data.name,
-          data.amount,
-          data.date,
-          data.tag,
-          "Expense"
-        );
-        const updateExpense = expenses.map((expense) =>
-          expense.id === expenseId
-            ? { ...expense, ...data, type: "Income" }
-            : expense
-        );
-        setExpenses(updateExpense);
-        toast.success("Expense Updated Successfully");
-      } else {
-        await addFinance(
-          user?.uid,
-          data.name,
-          data.amount,
-          data.date,
-          data.tag,
-          "Expense"
-        );
-        const newExpense = {
-          ...data,
-          id: `${expenses.length + 1}`,
-          type: "Expense",
-        };
-        setExpenses([...expenses, newExpense]);
-        toast.success("Expense created Successfully");
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        ToastError.serialize(error);
-      }
-    }
-    setOpenExpense(false);
-    setIncomeId(null);
-  };
-
-  // searching and filtering logic
   const visibleExpenseIncome = expenses.filter((expense) => {
     const matchesCategory =
       selectedCategory === "All" || expense.type === selectedCategory;
@@ -197,19 +85,19 @@ const Dashboard = () => {
         <TotalExpensesForm
           open={openExpense}
           onOpenChange={handleExpenseModal}
-          onSubmit={onSubmitExpense}
+          onSubmit={(data) => handleSubmitExpense(data)}
           editId={expenseId}
           expenses={expensesOnly}
         />
         <TotalIncomeForm
           open={openIncome}
           onOpenChange={handleIncomeModal}
-          onSubmit={onSubmitIncome}
+          onSubmit={(data) => handleSubmitIncome(data)}
           editId={incomeId}
           incomes={incomesOnly}
         />
       </div>
-      <div className=" flex items-center justify-between px-8 gap-x-4">
+      <div className=" flex items-center justify-between px-8 gap-x-4 mb-4">
         <SearchInput onSearch={(serchText) => setSeaarch(serchText)} />
         <ExpenseFilter
           onSelectCategory={(category) => setSelectedCategory(category)}
