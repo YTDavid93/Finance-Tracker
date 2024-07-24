@@ -12,7 +12,7 @@ import {
 } from "firebase/firestore";
 import { db } from "./Firebase";
 
-const FINANCE_COLLECTION = "finance";
+const FINANCE_COLLECTIONS = "finance";
 
 export const addFinance = async (
   uid: string | undefined,
@@ -23,7 +23,7 @@ export const addFinance = async (
   type: string
 ) => {
   try {
-    await addDoc(collection(db, FINANCE_COLLECTION), {
+    const docRef = await addDoc(collection(db, FINANCE_COLLECTIONS), {
       uid,
       name,
       amount,
@@ -31,6 +31,8 @@ export const addFinance = async (
       tag,
       type,
     });
+    
+    return docRef;
   } catch (error) {
     console.error("Error adding document: ", error);
   }
@@ -39,7 +41,7 @@ export const addFinance = async (
 export const getFinance = async (uid: string | undefined) => {
   try {
     const q = query(
-      collection(db, FINANCE_COLLECTION),
+      collection(db, FINANCE_COLLECTIONS),
       where("uid", "==", uid)
     );
     const querySnapshot = await getDocs(q);
@@ -65,7 +67,7 @@ export const updateReceipt = (
   tag: string,
   type: string
 ) => {
-  setDoc(doc(db, FINANCE_COLLECTION, id), {
+  setDoc(doc(db, FINANCE_COLLECTIONS, id), {
     uid,
     name,
     amount,
@@ -76,15 +78,15 @@ export const updateReceipt = (
 };
 
 export const fetchDatForEditId = async (editId: string) => {
-  const docRef = doc(db, FINANCE_COLLECTION, editId);
-  const docSnap = await getDoc(docRef) ;
+  const docRef = doc(db, FINANCE_COLLECTIONS, editId);
+  const docSnap = await getDoc(docRef);
   if (docSnap.exists()) {
     return docSnap.data();
   } else {
     throw new Error("No such Document!");
   }
-}
+};
 
 export const deleteReceipt = (id: string) => {
-  deleteDoc(doc(db, FINANCE_COLLECTION, id));
-}
+  deleteDoc(doc(db, FINANCE_COLLECTIONS, id));
+};
