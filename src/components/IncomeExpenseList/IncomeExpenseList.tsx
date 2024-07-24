@@ -1,3 +1,4 @@
+import { useState } from "react";
 import DeleteDialog from "../ui/DeleteDialog";
 import {
   Table,
@@ -10,7 +11,8 @@ import {
   TableRow,
 } from "../ui/table";
 import { MdEdit } from "react-icons/md";
-
+import { paginate } from "../../utils/paginate";
+import Paginationnext from "../ui/PaginationPage"
 export interface ExpenseIncome {
   id: string;
   name: string;
@@ -27,18 +29,20 @@ interface Props {
 }
 
 const IncomeExpenseList = ({ expensesincomes, onDelete, onEdit }: Props) => {
+  const [pageSize, setPageSize] = useState<number>(4);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const movies = paginate(expensesincomes, currentPage, pageSize)
+
   return (
     <section className="px-8">
       <Table className="bg-white rounded-md">
         <TableCaption className="flex"></TableCaption>
         <TableHeader>
-          {/* <TableCaption className="flex justify-around">
-            <h1>My transaction</h1>
-            <div>
-              <button>Export to CSC</button>
-              <button>Import From CSV</button>
-            </div>
-          </TableCaption> */}
           <TableRow>
             <TableHead>Name</TableHead>
             <TableHead>Amount</TableHead>
@@ -49,8 +53,8 @@ const IncomeExpenseList = ({ expensesincomes, onDelete, onEdit }: Props) => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {expensesincomes.length > 0 ? (
-            expensesincomes.map((el) => (
+          {movies.length > 0 ? (
+            movies.map((el) => (
               <TableRow key={el.id}>
                 <TableCell className="font-medium">{el.name}</TableCell>
                 <TableCell>{el.amount}</TableCell>
@@ -89,6 +93,12 @@ const IncomeExpenseList = ({ expensesincomes, onDelete, onEdit }: Props) => {
           </TableRow>
         </TableFooter>
       </Table>
+      <Paginationnext
+        itemsCount={expensesincomes.length}
+        pageSize={pageSize}
+        onPageChange={handlePageChange}
+        currentPage={currentPage}
+      />
     </section>
   );
 };
