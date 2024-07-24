@@ -64,7 +64,7 @@ const TotalIncome = ({
         console.error("Error fetching document:", err);
       }
     },
-    [setValue]
+    [setValue, editId]
   );
 
   useEffect(() => {
