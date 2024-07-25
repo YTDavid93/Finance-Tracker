@@ -29,7 +29,7 @@ interface Props {
 }
 
 const IncomeExpenseList = ({ expensesincomes, onDelete, onEdit }: Props) => {
-  const [pageSize, setPageSize] = useState<number>(4);
+  const pageSize = 4;
   const [currentPage, setCurrentPage] = useState<number>(1);
 
   const handlePageChange = (page: number) => {
