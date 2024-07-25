@@ -12,7 +12,7 @@ const NavBar = ({ onClick }: Props) => {
       <h1 className="text-xl font-medium text-white">Financely.</h1>
 
       <div className="flex items-center gap-4 text-white">
-        <p>User: {user?.displayName}</p>
+        <p>{user?.displayName ? "User" : ""}</p>
         <button onClick={onClick}>logout</button>
       </div>
     </nav>
