@@ -12,7 +12,7 @@ import {
 } from "../ui/table";
 import { MdEdit } from "react-icons/md";
 import { paginate } from "../../utils/paginate";
-import Paginationnext from "../ui/PaginationPage"
+import Paginationnext from "../ui/PaginationPage";
 export interface ExpenseIncome {
   id: string;
   name: string;
@@ -36,7 +36,7 @@ const IncomeExpenseList = ({ expensesincomes, onDelete, onEdit }: Props) => {
     setCurrentPage(page);
   };
 
-  const movies = paginate(expensesincomes, currentPage, pageSize)
+  const movies = paginate(expensesincomes, currentPage, pageSize);
 
   return (
     <section className="px-8">

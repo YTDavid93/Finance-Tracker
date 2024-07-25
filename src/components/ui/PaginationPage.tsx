@@ -7,6 +7,7 @@ import {
   PaginationPrevious,
   PaginationNext,
 } from "./pagination";
+import './paginationStyles.css'
 
 interface Props {
   itemsCount: number;
@@ -26,29 +27,33 @@ const PaginationPage = ({
   const pages = _.range(1, pagesCount + 1);
 
   return (
-    <Pagination className="justify-end">
-      <PaginationContent>
-        <PaginationItem>
-          <PaginationPrevious
-            href="#"
-            onClick={() => onPageChange(currentPage - 1)}
-          />
-        </PaginationItem>
-        {pages.map((page) => (
-          <PaginationItem key={page}>
-            <PaginationLink href="#" onClick={() => onPageChange(page)}>
-              {page}
-            </PaginationLink>
+      <Pagination className="justify-end">
+        <PaginationContent>
+          <PaginationItem className={currentPage === 1 ? "disabled" : ""}>
+            <PaginationPrevious
+              href="#"
+              onClick={() => currentPage > 1 && onPageChange(currentPage - 1)}
+            />
           </PaginationItem>
-        ))}
-        <PaginationItem>
-          <PaginationNext
-            href="#"
-            onClick={() => onPageChange(currentPage + 1)}
-          />
-        </PaginationItem>
-      </PaginationContent>
-    </Pagination>
+          {pages.map((page) => (
+            <PaginationItem key={page}>
+              <PaginationLink href="#" onClick={() => onPageChange(page)}>
+                {page}
+              </PaginationLink>
+            </PaginationItem>
+          ))}
+          <PaginationItem
+            className={currentPage === pagesCount ? "disabled" : ""}
+          >
+            <PaginationNext
+              href="#"
+              onClick={() =>
+                currentPage < pagesCount && onPageChange(currentPage + 1)
+              }
+            />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
   );
 };
 
